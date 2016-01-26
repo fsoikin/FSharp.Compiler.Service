@@ -1739,6 +1739,8 @@ and FSharpType(cenv, typ:TType) =
     
     let isResolved() = not (isUnresolved())
 
+    let hash = lazy hash (box <| typ.ToString())
+
     new (g, thisCcu, tcImports, typ) = FSharpType(cenv(g,thisCcu,tcImports), typ)
 
     member __.IsUnresolved = isUnresolved()
@@ -1845,7 +1847,7 @@ and FSharpType(cenv, typ:TType) =
         |   :? FSharpType as t -> typeEquiv cenv.g typ t.V
         |   _ -> false
 
-    override x.GetHashCode() = hash x
+    override x.GetHashCode() = hash.Value
 
     member x.Format(denv: FSharpDisplayContext) = 
        protect <| fun () -> 
